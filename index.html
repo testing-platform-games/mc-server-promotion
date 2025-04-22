@@ -24,12 +24,27 @@
     .offline {
       background-color: #dc3545;
     }
+    #serverIcon {
+      margin-top: 20px;
+      width: 64px;
+      height: 64px;
+    }
+    #motd {
+      margin-top: 15px;
+      font-size: 1.1em;
+      font-style: italic;
+      color: #cccccc;
+    }
   </style>
 </head>
 <body>
   <h1>Minecraft Server Status</h1>
   <p><strong>Server IP:</strong> left-ky.gl.joinmc.link</p>
+  <p>Vote for this server on Minecraft Server List: <a href="https://minecraft-server-list.com/server/509551/" target="_blank">https://minecraft-server-list.com/server/509551/</a></p>
+  
+  <img id="serverIcon" src="" alt="Minecraft Server Icon" style="display:none;">
   <div id="serverStatus" class="status">Checking status...</div>
+  <div id="motd" style="display:none;"></div>
 
   <script>
     async function checkServerStatus() {
@@ -40,22 +55,43 @@
         const data = await response.json();
 
         const statusDiv = document.getElementById('serverStatus');
+        const iconImg = document.getElementById('serverIcon');
+        const motdDiv = document.getElementById('motd');
 
         if (data && data.online) {
           statusDiv.textContent = `✅ Server is online — ${data.players.online}/${data.players.max} players`;
           statusDiv.className = 'status online';
+
+          if (data.icon) {
+            iconImg.src = data.icon;
+            iconImg.style.display = 'block';
+          } else {
+            iconImg.style.display = 'none';
+          }
+
+          if (data.motd && data.motd.clean && data.motd.clean.length > 0) {
+            motdDiv.textContent = `MOTD: ${data.motd.clean.join(' ')}`;
+            motdDiv.style.display = 'block';
+          } else {
+            motdDiv.style.display = 'none';
+          }
         } else {
           statusDiv.textContent = '❌ Server is offline';
           statusDiv.className = 'status offline';
+          iconImg.style.display = 'none';
+          motdDiv.style.display = 'none';
         }
       } catch (error) {
-        document.getElementById('serverStatus').textContent = '⚠️ Unable to check server status.';
-        document.getElementById('serverStatus').className = 'status offline';
+        const statusDiv = document.getElementById('serverStatus');
+        statusDiv.textContent = '⚠️ Unable to check server status.';
+        statusDiv.className = 'status offline';
+
+        document.getElementById('serverIcon').style.display = 'none';
+        document.getElementById('motd').style.display = 'none';
       }
     }
 
     checkServerStatus();
-    // Optional: refresh every minute
     setInterval(checkServerStatus, 60000);
   </script>
 </body>
