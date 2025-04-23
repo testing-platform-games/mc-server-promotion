@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Minecraft Server Status</title>
+  <title>Paper Minecraft Server Status</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
@@ -35,16 +36,47 @@
       font-style: italic;
       color: #cccccc;
     }
+    #software {
+      margin-top: 10px;
+      color: #aaa;
+    }
+    a {
+      color: #61dafb;
+      text-decoration: none;
+    }
+    a:hover {
+      text-decoration: underline;
+      color: #90e0ef;
+    }
+    footer {
+      margin-top: 60px;
+      padding: 20px 0;
+      background-color: #2c2c2c;
+    }
+    footer img {
+      display: block;
+      margin: 0 auto;
+      filter: brightness(0.95);
+      max-width: 100%;
+      height: auto;
+    }
   </style>
 </head>
 <body>
-  <h1>Minecraft Server Status</h1>
+  <h1>Paper Minecraft Server Status</h1>
   <p><strong>Server IP:</strong> left-ky.gl.joinmc.link</p>
   <p>Vote for this server on Minecraft Server List: <a href="https://minecraft-server-list.com/server/509551/" target="_blank">https://minecraft-server-list.com/server/509551/</a></p>
   
   <img id="serverIcon" src="" alt="Minecraft Server Icon" style="display:none;">
   <div id="serverStatus" class="status">Checking status...</div>
   <div id="motd" style="display:none;"></div>
+  <div id="software"></div>
+
+  <footer>
+    <a href="https://www.spigotmc.org/resources/lightanticheat.112053/" target="_blank" rel="noopener noreferrer">
+      <img src="lightanticheatimg.png" alt="Powered by Light Anti-Cheat" width="256" height="68">
+    </a>
+  </footer>
 
   <script>
     async function checkServerStatus() {
@@ -57,37 +89,37 @@
         const statusDiv = document.getElementById('serverStatus');
         const iconImg = document.getElementById('serverIcon');
         const motdDiv = document.getElementById('motd');
+        const softwareDiv = document.getElementById('software');
 
         if (data && data.online) {
           statusDiv.textContent = `✅ Server is online — ${data.players.online}/${data.players.max} players`;
           statusDiv.className = 'status online';
 
-          if (data.icon) {
-            iconImg.src = data.icon;
-            iconImg.style.display = 'block';
-          } else {
-            iconImg.style.display = 'none';
-          }
+          iconImg.src = data.icon || '';
+          iconImg.style.display = data.icon ? 'block' : 'none';
 
-          if (data.motd && data.motd.clean && data.motd.clean.length > 0) {
+          if (data.motd?.clean?.length) {
             motdDiv.textContent = `MOTD: ${data.motd.clean.join(' ')}`;
             motdDiv.style.display = 'block';
           } else {
             motdDiv.style.display = 'none';
           }
+
+          softwareDiv.textContent = data.software?.name ? `Running on: ${data.software.name}` : '';
         } else {
           statusDiv.textContent = '❌ Server is offline';
           statusDiv.className = 'status offline';
           iconImg.style.display = 'none';
           motdDiv.style.display = 'none';
+          softwareDiv.textContent = '';
         }
       } catch (error) {
         const statusDiv = document.getElementById('serverStatus');
         statusDiv.textContent = '⚠️ Unable to check server status.';
         statusDiv.className = 'status offline';
-
         document.getElementById('serverIcon').style.display = 'none';
         document.getElementById('motd').style.display = 'none';
+        document.getElementById('software').textContent = '';
       }
     }
 
