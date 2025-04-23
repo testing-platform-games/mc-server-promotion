@@ -36,6 +36,15 @@
     .offline {
       background-color: #dc3545;
     }
+    .badge {
+      display: inline-block;
+      margin-left: 10px;
+      background: #444;
+      padding: 2px 8px;
+      border-radius: 8px;
+      font-size: 0.8em;
+      color: #ccc;
+    }
     #serverIcon {
       margin-top: 20px;
       width: 64px;
@@ -111,7 +120,10 @@
           const online = data.players?.online ?? 0;
           const max = data.players?.max ?? 0;
 
-          statusDiv.textContent = `✅ Server is online — ${online}/${max} players`;
+          const versionName = data.version?.name_clean || 'Unknown';
+          const latency = data.latency ? ` • Ping: ${data.latency}ms` : '';
+
+          statusDiv.innerHTML = `✅ Server is online — ${online}/${max} players <span class="badge">${versionName}${latency}</span>`;
           statusDiv.className = 'status online';
 
           if (data.icon) {
@@ -125,9 +137,7 @@
           motdDiv.textContent = motdClean ? `MOTD: ${motdClean}` : '';
           motdDiv.style.display = motdClean ? 'block' : 'none';
 
-          const softwareName = data.software?.name || 'Unknown';
-          const latency = data.latency ? ` • Ping: ${data.latency}ms` : '';
-          softwareDiv.textContent = `Running on: ${softwareName}${latency}`;
+          softwareDiv.textContent = `Version: ${versionName}${latency}`;
         } else {
           statusDiv.textContent = '❌ Server is offline';
           statusDiv.className = 'status offline';
@@ -136,6 +146,7 @@
           softwareDiv.textContent = '';
         }
       } catch (error) {
+        console.error('Fetch failed:', error);
         const statusDiv = document.getElementById('serverStatus');
         statusDiv.textContent = '⚠️ Unable to check server status.';
         statusDiv.className = 'status offline';
