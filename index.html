@@ -83,7 +83,7 @@
 </head>
 <body>
   <main>
-    <h1>Paper Minecraft Server Status</h1>
+    <h1>Sebby Webby's Minecraft Server Status</h1>
     <p><strong>Server IP:</strong> left-ky.gl.joinmc.link</p>
     <p>Vote for this server on Minecraft Server List:
       <a href="https://minecraft-server-list.com/server/509551/" target="_blank">
@@ -105,10 +105,9 @@
 
   <script>
     async function checkServerStatus() {
-      const serverIp = 'left-ky.gl.joinmc.link';
 
       try {
-        const response = await fetch(`https://api.mcstatus.io/v2/status/java/${serverIp}`);
+        const response = await fetch(`https://api.mcstatus.io/v2/status/java/left-ky.gl.joinmc.link`);
         const data = await response.json();
 
         const statusDiv = document.getElementById('serverStatus');
