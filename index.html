@@ -60,6 +60,9 @@
       margin-top: 10px;
       color: #aaa;
     }
+    .motd-section, .icon-section {
+      margin-top: 30px;
+    }
     a {
       color: #61dafb;
       text-decoration: none;
@@ -83,7 +86,7 @@
 </head>
 <body>
   <main>
-    <h1>Sebby Webby's Minecraft Server Status</h1>
+    <h1>Paper Minecraft Server Status</h1>
     <p><strong>Server IP:</strong> left-ky.gl.joinmc.link</p>
     <p>Vote for this server on Minecraft Server List:
       <a href="https://minecraft-server-list.com/server/509551/" target="_blank">
@@ -91,9 +94,16 @@
       </a>
     </p>
 
-    <img id="serverIcon" src="" alt="Minecraft Server Icon" style="display:none;">
     <div id="serverStatus" class="status">Checking status...</div>
-    <div id="motd" style="display:none;"></div>
+
+    <div class="icon-section">
+      <img id="serverIcon" src="" alt="Minecraft Server Icon" style="display:none;">
+    </div>
+
+    <div class="motd-section">
+      <div id="motd" style="display:none;"></div>
+    </div>
+
     <div id="software"></div>
   </main>
 
@@ -105,9 +115,10 @@
 
   <script>
     async function checkServerStatus() {
+      const serverIp = 'left-ky.gl.joinmc.link';
 
       try {
-        const response = await fetch(`https://api.mcstatus.io/v2/status/java/left-ky.gl.joinmc.link`);
+        const response = await fetch(`https://api.mcstatus.io/v2/status/java/${serverIp}`);
         const data = await response.json();
 
         const statusDiv = document.getElementById('serverStatus');
@@ -132,6 +143,7 @@
             iconImg.style.display = 'none';
           }
 
+          const motdClean = data.motd?.clean;
           motdDiv.textContent = motdClean ? `MOTD: ${motdClean}` : '';
           motdDiv.style.display = motdClean ? 'block' : 'none';
 
